@@ -161,8 +161,10 @@ export function platformHeaders(platform: Platform, env: Env, accept: string): H
   const headers = new Headers({
     accept,
     "accept-language": "zh-CN,zh;q=0.9,en;q=0.8",
-    "user-agent": env.USER_AGENT || DEFAULT_USER_AGENT,
   });
+  if (platform !== 'XIAOHONGSHU') {
+    headers.set("user-agent", env.USER_AGENT || DEFAULT_USER_AGENT);
+  }
   const settings: Record<Platform, [string, string | undefined]> = {
     DOUYIN: ["https://www.douyin.com/", env.DOUYIN_COOKIE],
     XIAOHONGSHU: ["https://www.xiaohongshu.com/", env.XIAOHONGSHU_COOKIE],
