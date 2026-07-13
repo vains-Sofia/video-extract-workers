@@ -1,0 +1,15 @@
+name = "video-extract"
+main = "src/index.ts"
+compatibility_date = "2026-07-13"
+workers_dev = true
+
+[vars]
+CACHE_TTL_SECONDS = "3600"
+FETCH_TIMEOUT_MS = "10000"
+MAX_IMAGE_COUNT = "20"
+MAX_IMAGE_BYTES = "26214400"
+
+# Cookies should be configured as secrets, never committed here:
+# npx wrangler secret put DOUYIN_COOKIE
+# npx wrangler secret put XIAOHONGSHU_COOKIE
+# npx wrangler secret put BILIBILI_COOKIE
