@@ -3,6 +3,10 @@ main = "src/index.ts"
 compatibility_date = "2026-07-13"
 workers_dev = true
 
+[[kv_namespaces]]
+binding = "EXTRACT_VIDEO"
+id = "2efda71c4d9b413e96293937a860d43e"
+
 [vars]
 CACHE_TTL_SECONDS = "3600"
 FETCH_TIMEOUT_MS = "10000"

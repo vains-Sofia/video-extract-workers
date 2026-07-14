@@ -31,11 +31,10 @@ export async function extractVideo(
   const extractor = extractors.find((candidate) => candidate.supports(originalUrl));
   if (!extractor) throw unsupportedPlatform(originalUrl);
 
-  const cache = typeof caches === "undefined" ? null : await caches.open("default");
   const cacheKey = await buildCacheKey(extractor.platform, originalUrl);
-  if (!forceRefresh && cache) {
-    const hit = await cache.match(cacheKey);
-    if (hit) return { ...(await hit.json() as ExtractResult), cached: true };
+  if (!forceRefresh) {
+    const hit = await env.EXTRACT_VIDEO.get<ExtractResult>(cacheKey, "json");
+    if (hit) return { ...hit, cached: true };
   }
 
   const extracted = await extractor.extract(originalUrl, env);
@@ -46,17 +45,14 @@ export async function extractVideo(
     extractedAt: new Date().toISOString(),
   };
 
-  if (cache) {
-    const ttl = boundedInt(env.CACHE_TTL_SECONDS, 3600, 60, 86_400);
-    const response = Response.json(result, { headers: { "cache-control": `public, max-age=${ttl}` } });
-    const write = cache.put(cacheKey, response);
-    if (ctx) ctx.waitUntil(write);
-    else await write;
-  }
+  const ttl = boundedInt(env.CACHE_TTL_SECONDS, 3600, 60, 86_400);
+  const write = env.EXTRACT_VIDEO.put(cacheKey, JSON.stringify(result), { expirationTtl: ttl });
+  if (ctx) ctx.waitUntil(write);
+  else await write;
   return result;
 }
 
-async function buildCacheKey(platform: Platform, url: string): Promise<Request> {
+async function buildCacheKey(platform: Platform, url: string): Promise<string> {
   const hash = await sha256(url);
-  return new Request(`https://video-extract-cache.invalid/${platform.toLowerCase()}/${hash}`, { method: "GET" });
+  return `extract:${platform.toLowerCase()}:${hash}`;
 }

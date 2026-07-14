@@ -1,6 +1,7 @@
 export type Platform = "DOUYIN" | "XIAOHONGSHU" | "BILIBILI";
 
 export interface Env {
+  EXTRACT_VIDEO: KVNamespace;
   DOUYIN_COOKIE?: string;
   XIAOHONGSHU_COOKIE?: string;
   BILIBILI_COOKIE?: string;
