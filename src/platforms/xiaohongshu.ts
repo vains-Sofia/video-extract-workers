@@ -19,7 +19,7 @@ import {
   values,
 } from "../utils";
 
-const DOMAINS = ["xiaohongshu.com", "xhslink.com"] as const;
+const DOMAINS = ["xiaohongshu.com", "xhslink.com", "xhslink.cn"] as const;
 const NOTE_ID = /\/(?:explore|discovery\/item)\/([A-Za-z0-9]+)/;
 
 export function supportsXiaohongshu(url: string): boolean {
